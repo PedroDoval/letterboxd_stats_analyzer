@@ -1,0 +1,17 @@
+<!DOCTYPE=html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>
+        Movie Report
+    </title>
+</head>
+<body>
+<h1>Estadísticas de 2021 del usuario pepito</h1>
+    {% for plot_file in plot_files %}
+    <div>
+    <img src="static/output/{{plot_file}}" alt="{{plot_file}}">
+    </div>
+    {% endfor %}
+</body>
+</html>`

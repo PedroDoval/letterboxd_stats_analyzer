@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href='/static/stylesheets/style-index.css' />
+    <script src="static/script.js"></script>
+    <meta charset="UTF-8">
+    <title>Letterbox Analyzer</title>
+</head>
+<body>
+<h1>Letterbox Analyzer</h1>
+<div>
+    <img class="logo" src="static/imgs/logo.png" >
+</div>
+<h3 style="color:#39D2B4; font-weight:bold;">Instrucciones</h3>
+<div class="instructions">
+    <h3 style="text-align:left"> 1. Obtén tu historial de Letterboxd. Se trata de un fichero .zip que puedes descargarte de la web. <br><a href="https://letterboxd.com/settings/data/" > Account settings > Import & Export > Export your data</a></h3>
+    <h3 style="text-align:left"> 2. Sube el .zip y selecciona el año que quieres analizar.</h3>
+    <h3 style="text-align:left"> Disclaimer: Este .zip contiene información que es pública de tu cuenta. Con la única excepción de listas privadas y de una carpeta con contenido que hayas borrado ('deleted). Si quieres eliminar estos ficheros del .zip antes de subirlo.</h3>
+</div>
+<br>
+{% if error %}
+    <p style="padding: 10px 20px; text-align: center; color: red;">An error occurred. Try again</p>
+{% endif %}
+
+
+<form method="POST" action="" enctype="multipart/form-data">
+  <div class="input-file-container">
+    <input class="input-file" id="my-file" type="file" name="file">
+    <label tabindex="0" for="my-file" class="input-file-trigger">Selecciona tu .zip</label>
+  </div>
+    <br>
+    <div class="select-year-container">
+    <select id="year" name="year" class="select-year-trigger">
+        <option value="2018">2018</option>
+      <option value="2019">2019</option>
+      <option value="2020">2020</option>
+      <option value="2021" selected>2021</option>
+      <option value="2022">2022</option>
+    </select>
+    </div>
+    <br>
+    <div class="submit-file-container">
+        <input class="submit-file" id="my-submit" name="submit" type="submit">
+    <label class="submit-file-trigger">Analizar</label>
+  </div>
+  <p class="file-return"></p>
+</form>
+
+<p class="txtcenter">Letterbox statistics analyzer<br /></p>
+<p class="txtcenter copy">by <a href="https://github.com/PedroDoval">pedroalonsodoval</a><br /></p>
+</body>
+</html>

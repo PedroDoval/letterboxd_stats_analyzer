@@ -1,0 +1,12 @@
+dateparser
+pandas
+numpy
+typer
+matplotlib
+seaborn
+pyyaml
+flask
+flask_json
+werkzeug
+WordCloud
+nltk
