@@ -13,14 +13,27 @@
 </head>
 <body>
 	<p>&nbsp;</p>
+
+	<div>
 	<h1>Estadísticas de Letterbox</h1>
-	<p style="padding: 10px 20px; text-align: center;">Periodo: {{year}}</p>
-	<p style="padding: 10px 20px; text-align: center;">Usuario: {{user}}</p>
+    <img class="logo" src="static/imgs/logo.png" >
+	</div>
+	<p style="padding: 10px 20px; text-align: center; font-weight: bold;">Periodo: {{year}}</p>
+	<p style="padding: 10px 20px; text-align: center; font-weight: bold;">Usuario: {{user}}</p>
 
 	<div id="gallery">
 		{% for plot_file in plot_files %}
-    	<div> - </div>
+			{% if plot_file == 'wordcloud.png' %}
+			<p style="padding: 10px 20px; text-align: center; font-weight: bold;">
+				Nube de palabras de las reviews</p>
+		{% endif %}
+		{% if plot_file == 'table_rates.png' %}
+			<p style="padding: 10px 20px; text-align: center; font-weight: bold;">
+				Películas con mayor y menor votación</p>
+		{% endif %}
     	<img src="static/output/{{plot_file}}" alt="{{plot_file}}" alt="image">
+
+		<div>  {{ "-" if not loop.last }} </div>
     	{% endfor %}
 	</div>
 
