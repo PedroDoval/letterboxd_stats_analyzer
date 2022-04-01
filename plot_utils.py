@@ -6,13 +6,13 @@ import matplotlib.dates as mdates
 import seaborn as sns
 
 
-def plot_bars_messages(count_messages, title, output_dir, filename=None):
+def plot_bars_messages(count_messages, title, output_dir, xlabel, filename=None):
     filename = title.replace("/", "-") if filename is None else filename
     values = count_messages.values()
     names = count_messages.keys()
 
     fig = plt.figure()
-    plt.xlabel("Mes")
+    plt.xlabel(xlabel)
     plt.ylabel("Nº películas")
     plt.xticks(rotation=65, ha="right")
     plt.title(title, fontweight="bold")
@@ -135,6 +135,7 @@ def plot_table(max_films, max_rate, min_films, min_rate, output_dir, filename):
 def wordcloud(texts, output_dir):
     # Creating word_cloud with text as argument in .generate() method
     # https://amueller.github.io/word_cloud/generated/wordcloud.WordCloud.html #cividis
+
     word_cloud = WordCloud(collocations=False, colormap='copper', background_color=None, mode='RGBA', contour_width=1).generate(texts)
     # Display the generated Word Cloud
     #plt.imshow(word_cloud, interpolation='bilinear')

@@ -166,6 +166,16 @@ def analyze_ratings(diary):
 
     return max_films, max_rate, min_films, min_rate, not_rated, percentage
 
+def analyze_ratings_distribution(diary):
+    ratings = list(diary["Rating"])
+    ratings = [2*r for r in ratings if str(r) != 'nan' ]
+    rate_distr = dict(Counter(ratings))
+    for value in utils.points_to_stars.keys():
+        if value not in rate_distr:
+            rate_distr[value] = 0
+
+    return rate_distr
+
 
 def get_reviews(review_file, year=None):
     reviews = pd.read_csv(review_file)

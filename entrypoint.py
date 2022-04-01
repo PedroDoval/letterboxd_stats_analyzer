@@ -1,6 +1,6 @@
 import nltk
 import plot_utils
-from data_processor import get_profile_info, get_month_distribution, get_month_distribution_all_year, get_year_distribution, get_reviews, analyze_ratings, get_weekday_distribution, get_diary, filter_year, extend_dates, analyze_lists, get_rewatched_rate
+from data_processor import get_profile_info, analyze_ratings_distribution, get_month_distribution, get_month_distribution_all_year, get_year_distribution, get_reviews, analyze_ratings, get_weekday_distribution, get_diary, filter_year, extend_dates, analyze_lists, get_rewatched_rate
 import os
 
 output_dir = None
@@ -16,7 +16,7 @@ def analyze_week(diary, year=None):
     weekday_distribution = get_weekday_distribution(diary)
     title = "Películas cada día de la semana"
     filename = "films_by_week"
-    plot_utils.plot_bars_messages(weekday_distribution, title, output_dir, filename)
+    plot_utils.plot_bars_messages(weekday_distribution, title, output_dir, "Día de la semana", filename)
 
 def analyze_list(diary, config, year=None):
     lists = analyze_lists(config)
@@ -38,6 +38,14 @@ def analyze_ratings_entrypoing(diary):
     filename = "table_rates"
     plot_utils.plot_table(max_films, max_rate, min_films, min_rate, output_dir, filename)
 
+def analyze_ratings_distribution_entrypoint(diary):
+    rate_distr = analyze_ratings_distribution(diary)
+    title = "Distribución de votos en el año"
+    filename = "rate_distrib.png"
+    plot_utils.plot_bars_messages(rate_distr, title, output_dir, "Votación", filename)
+
+    pass
+
 def analyze_reviews(config, year):
     reviews = get_reviews(os.path.join(config["input_dir"], 'reviews.csv'), year)
     print(reviews.head())
@@ -48,14 +56,14 @@ def analyze_reviews(config, year):
     text = " ".join(cat for cat in reviews_texts)
     stopwords = nltk.corpus.stopwords.words('spanish') + ['pues', 'con']
     texts = remove_stopwords(text, stopwords)
-
+    texts = texts.lower().replace("ú","u").replace("ó","o").replace("í","i").replace("é","e").replace("á","a")
     plot_utils.wordcloud(texts, config["output_dir"])
 
 def analyze_year(diary, config):
     year_distribution = get_year_distribution(diary)
     title = "Películas cada año"
     filename = "films_by_year"
-    plot_utils.plot_bars_messages(year_distribution, title, output_dir, filename)
+    plot_utils.plot_bars_messages(year_distribution, title, output_dir, "Año", filename)
 
 def read_profile(inputdir):
     profiledf = get_profile_info(os.path.join(inputdir,'profile.csv'))

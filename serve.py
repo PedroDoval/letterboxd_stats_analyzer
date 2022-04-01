@@ -20,6 +20,7 @@ def upload_file():
         user = "peeeedrito"
 
         remove_files_dir('static/output')
+        remove_files_dir('data/files/lists')
 
         if uploaded_file.filename != '':
 
@@ -46,6 +47,7 @@ def upload_file():
             # For all years
             diary = get_diary(os.path.join(input_dir, 'diary.csv'), year)
             entrypoint.analyze_ratings_entrypoing(diary)
+            entrypoint.analyze_ratings_distribution_entrypoint(diary)
             entrypoint.analyze_list(diary, config, year)
             entrypoint.analyze_month(diary, year)
             entrypoint.analyze_week(diary, year)
@@ -64,6 +66,7 @@ def upload_file():
         return render_template('index.html', error=True)
 
 def remove_files_dir(dir):
+
     for f in os.listdir(dir):
         os.remove(os.path.join(dir, f))
 

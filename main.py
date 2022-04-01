@@ -47,6 +47,7 @@ def plot(config_file):
     entrypoint.analyze_month(diary, year)
     entrypoint.analyze_week(diary, year)
     entrypoint.analyze_rewatched(diary)
+    entrypoint.analyze_ratings_distribution_entrypoint(diary)
 
 
 
