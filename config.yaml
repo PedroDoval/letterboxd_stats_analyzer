@@ -1,8 +1,11 @@
 
+# The folder where you unzip the data
 input_dir: data
 
 output_dir: output
 
+# The year you want to analyze
 year: 2022
 
+# Get the wordcloud plot of your reviews. If you have a lot of long reviews this may take some time
 get_wordcloud: True

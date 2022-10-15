@@ -7,7 +7,7 @@ This is a tool for analyze the data of your Letterboxd history and represent it 
 # How to use
 
 #### Get the data
-- Export your Letterboxd data as a zip from here.
+- Export your Letterboxd data as a zip from [here](https://letterboxd.com/settings/data/).
 #### Configuration
 - Configure the `config.yaml`file
 - Export the zip data in the `input_dir` directory
