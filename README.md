@@ -1,24 +1,27 @@
 This is a tool for analyze the data of your Letterboxd history and represent it with plots.
 
 # Installation
-`pip install -r requirements`
+`pip install -r requirements.txt`
 
 
 # How to use
 
 #### Get the data
-Export your Letterboxd data as a zip from here.
+- Export your Letterboxd data as a zip from here.
 #### Configuration
-Configure the `config.yaml file
-Export the zip data in the `input_dir` directory
+- Configure the `config.yaml`file
+- Export the zip data in the `input_dir` directory
 #### Run
-```commandline
-python3 main.py
-```
+`python3 main.py`
+
+#### Run as a web service
+1) `python3 serve.py`
+2) Upload your .zip file in http://127.0.0.1:5001
+3) This may not work correctly in a concurrent way if you use it simultaneously with different data
+********************
 
 
-
-# Examples
+# Some examples of the output
  - WordCloud of your reviews:
 
  <img src="imgs/wordcloud.png" alt="wordcloud" width="400"/>

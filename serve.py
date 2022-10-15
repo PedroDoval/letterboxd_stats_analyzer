@@ -87,6 +87,6 @@ def remove_files_dir(dir):
         os.remove(os.path.join(dir, f))
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.35', port=5001, debug=True, threaded=False)
+    app.run(host="127.0.0.1", port=5001, debug=True, threaded=False)
 
 # sudo ufw allow 5001/tcp
