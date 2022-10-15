@@ -135,6 +135,8 @@ def analyze_lists(config):
 
 
 def get_fraction(value,total):
+    if total == 0:
+        return 0
     percentage = round(100*value/total,1)
     return percentage
 
@@ -151,18 +153,19 @@ def get_rewatched_rate(diary):
 
 def analyze_ratings(diary):
     ratings = list(diary["Rating"])
-    print(ratings)
-    #print(type(ratings[3]))
-    max_rate = np.nanmax(ratings)
-    min_rate = np.nanmin(ratings)
-
-    max_films = diary[diary["Rating"]==max_rate].Name
-    min_films = diary[diary["Rating"] == min_rate].Name
-
-
     not_rated = len([0 for x in ratings if math.isnan(x)])
     percentage = 100 - get_fraction(not_rated, len(ratings))
     print("Not rated films: " + str(not_rated) + "/" + str(len(ratings)) + " ("+str(percentage) +"%)")
+
+    diaryordered = diary.copy()
+    diaryordered = diaryordered.dropna(subset=['Rating'])
+    diaryordered = diaryordered.sort_values(by='Rating', ascending=False)
+
+    max_films = diaryordered["Name"][0:5]
+    max_rate = diaryordered["Rating"][0:5]
+    diaryordered = diaryordered.sort_values(by='Rating', ascending=True)
+    min_films = diaryordered["Name"][0:5]
+    min_rate = diaryordered["Rating"][0:5]
 
     return max_films, max_rate, min_films, min_rate, not_rated, percentage
 
@@ -174,7 +177,8 @@ def analyze_ratings_distribution(diary):
         if value not in rate_distr:
             rate_distr[value] = 0
 
-    return rate_distr
+    avg_rate = sum(ratings)/len(ratings)
+    return rate_distr, avg_rate
 
 
 def get_reviews(review_file, year=None):

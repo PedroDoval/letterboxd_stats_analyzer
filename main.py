@@ -41,7 +41,7 @@ def plot(config_file):
     #end_date = None
     ##diary = diary[diary["datetime"].apply(lambda x: check_dates(x, start_date, end_date))]
 
-
+    entrypoint.analyze_ratings_entrypoint_5(diary)
     entrypoint.analyze_ratings_entrypoing(diary)
     entrypoint.analyze_list(diary, config, year)
     entrypoint.analyze_month(diary, year)

@@ -39,8 +39,9 @@ def analyze_ratings_entrypoing(diary):
     plot_utils.plot_table(max_films, max_rate, min_films, min_rate, output_dir, filename)
 
 def analyze_ratings_distribution_entrypoint(diary):
-    rate_distr = analyze_ratings_distribution(diary)
-    title = "Distribución de votos en el año"
+    rate_distr, avg_rate = analyze_ratings_distribution(diary)
+
+    title = "Distribución de votos en el año (Media: {:.2f})".format(round(avg_rate,2))
     filename = "rate_distrib.png"
     plot_utils.plot_bars_messages(rate_distr, title, output_dir, "Votación", filename)
 

@@ -59,7 +59,8 @@ def upload_file():
         # https://html5-templates.com/preview/infinite-scroll-image-gallery.html citar!!!
         return render_template('accepted.html', plot_files=plot_files, user=profile['Username'], year=year)
         #return render_template('accepted.html') #redirect(url_for('index'))
-    except:
+    except Exception as e:
+        print(e.with_traceback())
         ## detectar errores de: año no existe
         ## de no es un zip
         ## de error inesperado

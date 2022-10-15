@@ -88,6 +88,8 @@ def plot_lists_pies(lists, config, filename=None):
     colors = ['#00e054', '#ff8000']
     for lista in lists:
         values = [lista["num_watched"], lista["size"]-lista["num_watched"]]
+        if values == [0,0]:
+            continue
         # first row, first column
 
         ax1 = plt.subplot2grid((rows, 2), (i,j))
@@ -113,24 +115,25 @@ def equalize_size_list(lista, maxsize):
 
 def plot_table(max_films, max_rate, min_films, min_rate, output_dir, filename):
 
-    max_len = max(len(max_films), len(min_films))
-
-    max_films = equalize_size_list(list(max_films), max_len)
-    min_films = equalize_size_list(list(min_films), max_len)
-    data = np.array([list(max_films), list(min_films)]).transpose()
+    data = np.array([list(max_films), list(max_rate), list(min_films), list(min_rate)]).transpose()
     fig, ax = plt.subplots()
     ax.set_axis_off()
     table = plt.table(cellText=data,
-        rowLabels=["" for i in range(0,max_len)],
-        colLabels=["Highest score ("+str(max_rate)+"★)","Worst score ("+str(min_rate)+"★)"],
+        rowLabels=["" for i in range(0,5)],
+        colLabels=["Film", "Score (★)", "Film", "Score (★)"],
         loc='center',
         cellLoc ='center',
     )
+    table.set_fontsize(15)
+    table.scale(1.2, 1.2)  # may help
     table[(0,0)].set_facecolor("#00e054")
     table[(0,1)].set_facecolor("#00e054")
+    table[(0,2)].set_facecolor("#00e054")
+    table[(0,3)].set_facecolor("#00e054")
     #ax.set_title("Movies with higher or smaller rating")
     fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=True)# bbox_inches='tight')
     #plt.show()
+
 
 def wordcloud(texts, output_dir):
     # Creating word_cloud with text as argument in .generate() method
