@@ -31,7 +31,7 @@ def upload_file():
                 zip_ref.extractall(targetdir)
 
             input_dir = 'data/'
-            config = {"input_dir": input_dir, "output_dir": outputdir, 'year': year}
+            config = {"input_dir": input_dir, "output_dir": outputdir, 'year': year, "get_wordcloud":True}
 
             # Get profile
             profile = data_processor.read_profile(config["input_dir"])

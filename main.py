@@ -62,8 +62,9 @@ def plot(config_file):
     rewatched_rate, rewatched_percentage = data_processor.get_rewatched_rate(diary_year)
     plotter.plot_rewatched_info(rewatched_rate, rewatched_percentage)
 
-    reviews_texts = data_processor.get_reviews_texts(config, year=year)
-    plotter.plot_reviews_wordcloud(reviews_texts, config)
+    if config["get_wordcloud"]:
+        reviews_texts = data_processor.get_reviews_texts(config, year=year)
+        plotter.plot_reviews_wordcloud(reviews_texts, config)
 
 
 
