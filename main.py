@@ -7,7 +7,7 @@ import plot_utils
 import typer
 import pandas as pd
 import datetime
-from data_processor import get_month_distribution, get_month_distribution_all_year, get_weekday_distribution, get_diary, filter_year, extend_dates, analyze_lists, get_rewatched_rate
+from data_processor import get_month_distribution, get_month_distribution_all_year, get_weekday_distribution, get_diary, filter_diary_by_year, extend_dates, analyze_lists, get_rewatched_rate
 import entrypoint
 
 # Declaring the typer application
@@ -16,7 +16,7 @@ app = typer.Typer()
 
 @app.command()
 def plot(config_file):
-    print("Starting analysis")  # Press Ctrl+F8 to toggle the breakpoint.
+    print("Starting analysis.")  # Press Ctrl+F8 to toggle the breakpoint.
 
     with open(config_file, "r") as f_stream:
         config = yaml.load(f_stream, Loader=yaml.FullLoader)
@@ -35,19 +35,24 @@ def plot(config_file):
     entrypoint.analyze_reviews(config, year=None)
 
     # For one year only
-    diary = get_diary(os.path.join(config["input_dir"], 'diary.csv'), year)
+    diary_year = get_diary(os.path.join(config["input_dir"], 'diary.csv'), year)
 
+    # Custom data filter
     #start_date = None
     #end_date = None
     ##diary = diary[diary["datetime"].apply(lambda x: check_dates(x, start_date, end_date))]
 
-    entrypoint.analyze_ratings_entrypoint_5(diary)
-    entrypoint.analyze_ratings_entrypoing(diary)
-    entrypoint.analyze_list(diary, config, year)
-    entrypoint.analyze_month(diary, year)
-    entrypoint.analyze_week(diary, year)
-    entrypoint.analyze_rewatched(diary)
-    entrypoint.analyze_ratings_distribution_entrypoint(diary)
+    entrypoint.analyze_ratings_entrypoint(diary_year)
+    entrypoint.analyze_list(diary_year, config, year)
+
+    month_distribution_data = entrypoint.analyze_distribution_films_by_month(diary_year, year)
+    entrypoint.plot_distribution_films_by_month(month_distribution_data)
+
+    week_distribution_data = entrypoint.analyze_distribution_films_by_week(diary_year, year)
+    entrypoint.plot_distribution_films_by_week(week_distribution_data)
+
+    entrypoint.analyze_rewatched(diary_year)
+    entrypoint.analyze_ratings_distribution_entrypoint(diary_year)
 
 
 

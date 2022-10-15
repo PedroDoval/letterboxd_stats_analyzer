@@ -10,3 +10,4 @@ flask_json
 werkzeug
 WordCloud
 nltk
+black

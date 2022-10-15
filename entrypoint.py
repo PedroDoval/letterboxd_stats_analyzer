@@ -1,36 +1,41 @@
 import nltk
 import plot_utils
-from data_processor import get_profile_info, analyze_ratings_distribution, get_month_distribution, get_month_distribution_all_year, get_year_distribution, get_reviews, analyze_ratings, get_weekday_distribution, get_diary, filter_year, extend_dates, analyze_lists, get_rewatched_rate
+from data_processor import get_month_distribution, get_month_distribution_all_year, get_year_distribution, get_weekday_distribution
 import os
 
 output_dir = None
 
-def analyze_month(diary, year=None):
-    month_distribution = get_month_distribution_all_year(diary) if year == None else get_month_distribution(diary)
+
+
+def plot_distribution_films_by_month(month_distribution_data, web_service=False):
     title = "Películas cada mes"
     filename = "films_by_month"
-    plot_utils.plot_bars_messages(month_distribution, title, output_dir, filename)
+    plot_utils.plot_bars_messages(month_distribution_data, title, output_dir, filename, transparent=web_service)
 
-
-def analyze_week(diary, year=None):
-    weekday_distribution = get_weekday_distribution(diary)
+def plot_distribution_films_by_week(week_distribution_data, web_service=False):
     title = "Películas cada día de la semana"
     filename = "films_by_week"
-    plot_utils.plot_bars_messages(weekday_distribution, title, output_dir, "Día de la semana", filename)
+    plot_utils.plot_bars_messages(week_distribution_data, title, output_dir, "Día de la semana", filename, transparent=web_service)
 
-def analyze_list(diary, config, year=None):
-    lists = analyze_lists(config)
+def plot_distribution_films_by_year(year_distribution, web_service=False):
+    title = "Películas cada año"
+    filename = "films_by_year"
+    plot_utils.plot_bars_messages(year_distribution, title, output_dir, "Año", filename, transparent=web_service)
+
+
+
+
+def plot_lists_data(lists_data, config):
     filename = "list_pies_plot"
-    plot_utils.plot_lists_pies(lists, config, filename)
+    plot_utils.plot_lists_pies(lists_data, config, filename)
 
-def analyze_rewatched(diary):
-    rewatched_rate, percentage = get_rewatched_rate(diary)
-    title = "Rate of rewatched films (" + str(percentage) + "%)"
+def plot_rewatched_info(rewatched_rate, rewatched_percentage):
+    title = "Rate of rewatched films (" + str(rewatched_percentage) + "%)"
     filename = "pie_rewatched"
     plot_utils.plot_pie_messages(rewatched_rate, title, output_dir, filename)
 
-def analyze_ratings_entrypoing(diary):
-    max_films, max_rate, min_films, min_rate, not_rated, percentage = analyze_ratings(diary)
+def plot_ratings_entrypoint(ratings_data, diary):
+    max_films, max_rate, min_films, min_rate, not_rated, percentage = ratings_data.values()
     rated_rate = {"Rated": len(diary)-not_rated, "Not rated": not_rated }
     title = "Rated films (" + str(percentage) + "%)"
     filename = "pie_rated"
@@ -38,40 +43,16 @@ def analyze_ratings_entrypoing(diary):
     filename = "table_rates"
     plot_utils.plot_table(max_films, max_rate, min_films, min_rate, output_dir, filename)
 
-def analyze_ratings_distribution_entrypoint(diary):
-    rate_distr, avg_rate = analyze_ratings_distribution(diary)
-
+def plot_ratings_distribution_entrypoint(ratings_distribution, avg_rate):
     title = "Distribución de votos en el año (Media: {:.2f})".format(round(avg_rate,2))
     filename = "rate_distrib.png"
-    plot_utils.plot_bars_messages(rate_distr, title, output_dir, "Votación", filename)
+    plot_utils.plot_bars_messages(ratings_distribution, title, output_dir, "Votación", filename)
 
-    pass
 
-def analyze_reviews(config, year):
-    reviews = get_reviews(os.path.join(config["input_dir"], 'reviews.csv'), year)
-    print(reviews.head())
-    reviews_texts = reviews.Review
-    print(list(reviews_texts))
-    ##remove stopwords
-    nltk.download('stopwords')
-    text = " ".join(cat for cat in reviews_texts)
-    stopwords = nltk.corpus.stopwords.words('spanish') + ['pues', 'con']
-    texts = remove_stopwords(text, stopwords)
-    texts = texts.lower().replace("ú","u").replace("ó","o").replace("í","i").replace("é","e").replace("á","a")
+def plot_reviews_wordcloud(texts, config):
     plot_utils.wordcloud(texts, config["output_dir"])
 
-def analyze_year(diary, config):
-    year_distribution = get_year_distribution(diary)
-    title = "Películas cada año"
-    filename = "films_by_year"
-    plot_utils.plot_bars_messages(year_distribution, title, output_dir, "Año", filename)
-
-def read_profile(inputdir):
-    profiledf = get_profile_info(os.path.join(inputdir,'profile.csv'))
-    profile = profiledf.to_dict('records')[0]
-    return profile
 
 
-def remove_stopwords(text,stopwords):
-    text = " ".join([word for word in text.split() if word.lower() not in stopwords])
-    return text
+
+

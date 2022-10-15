@@ -2,6 +2,7 @@ import math
 import numpy as np
 from collections import Counter, OrderedDict
 import os
+import nltk
 import dateparser
 import logging
 import pandas as pd
@@ -13,12 +14,14 @@ def get_diary(diary_file, year=None):
     print(diary.head())
     diary = extend_dates(diary)
     if year:
-        diary = filter_year(diary, year)
+        diary = filter_diary_by_year(diary, year)
     return diary
 
-def get_profile_info(profile_file):
-    profile = pd.read_csv(profile_file)
+def read_profile(inputdir):
+    profiledf = pd.read_csv((os.path.join(inputdir,'profile.csv')))
+    profile = profiledf.to_dict('records')[0]
     return profile
+
 
 def extend_dates(diary):
     def parsedate(x):
@@ -59,11 +62,9 @@ def get_weekday_distribution(diary):
     return counter_weekday
 
 
-def filter_year(diary, year):
-
+def filter_diary_by_year(diary, year):
     diary = diary[diary["year"] == year]
     return diary
-
 
 def get_month_distribution_all_year(diary):
     group_months = diary.groupby(["month", "year"]).size().reset_index(name="count_movies")
@@ -102,6 +103,15 @@ def get_year_distribution(diary):
     print("Counter years")
     print(counter_years)
     return counter_years
+
+
+def analyze_distribution_films_by_month(diary, year=None):
+    month_distribution_data = get_month_distribution_all_year(diary) if year == None else get_month_distribution(diary)
+    return month_distribution_data
+
+def analyze_distribution_films_by_week(diary, year=None):
+    week_distribution_data = get_weekday_distribution(diary) if year == None else get_month_distribution(diary)
+    return week_distribution_data
 
 def get_watched_df(config):
     watched_df = pd.read_csv(os.path.join(config["input_dir"], "watched.csv"))
@@ -167,7 +177,8 @@ def analyze_ratings(diary):
     min_films = diaryordered["Name"][0:5]
     min_rate = diaryordered["Rating"][0:5]
 
-    return max_films, max_rate, min_films, min_rate, not_rated, percentage
+    ratings_data = {"max_films": max_films, "max_rate": max_rate, "min_films":min_films, "min_rate":min_rate, "not_rated":not_rated, "percentage":percentage}
+    return ratings_data
 
 def analyze_ratings_distribution(diary):
     ratings = list(diary["Rating"])
@@ -185,5 +196,21 @@ def get_reviews(review_file, year=None):
     reviews = pd.read_csv(review_file)
     reviews = extend_dates(reviews)
     if year:
-        reviews = filter_year(reviews, year)
+        reviews = filter_diary_by_year(reviews, year)
     return reviews
+
+def get_reviews_texts(config, year):
+    reviews = get_reviews(os.path.join(config["input_dir"], 'reviews.csv'), year)
+    reviews_texts = reviews.Review
+
+    nltk.download('stopwords')
+    text = " ".join(cat for cat in reviews_texts)
+    stopwords = nltk.corpus.stopwords.words('spanish') + ['pues', 'con']
+    texts = remove_stopwords(text, stopwords)
+
+    texts = texts.lower().replace("ú","u").replace("ó","o").replace("í","i").replace("é","e").replace("á","a")
+    return texts
+
+def remove_stopwords(text,stopwords):
+    text = " ".join([word for word in text.split() if word.lower() not in stopwords])
+    return text

@@ -6,7 +6,7 @@ import matplotlib.dates as mdates
 import seaborn as sns
 
 
-def plot_bars_messages(count_messages, title, output_dir, xlabel, filename=None):
+def plot_bars_messages(count_messages, title, output_dir, xlabel, filename=None, transparent=True):
     filename = title.replace("/", "-") if filename is None else filename
     values = count_messages.values()
     names = count_messages.keys()
@@ -17,7 +17,7 @@ def plot_bars_messages(count_messages, title, output_dir, xlabel, filename=None)
     plt.xticks(rotation=65, ha="right")
     plt.title(title, fontweight="bold")
     plt.bar(names, values, color='#00e054', edgecolor='black')
-    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=True, bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=transparent, bbox_inches='tight')
     #plt.show()
 
 
@@ -76,12 +76,12 @@ def plot_lists_pies(lists, config, filename=None):
     title = "user_lists"
     filename = title.replace("/", "-") if filename is None else filename
 
-
     fig = plt.figure()
     fig.suptitle('Listas y % de películas vistas', fontweight="bold")
     # 2 rows 2 columns
     rows = int(len(lists)/2)
-    if len(lists)%2 == 1: rows += 1
+    if len(lists)%2 == 1:
+        rows += 1
     i=0
     j=0
     index = 0
