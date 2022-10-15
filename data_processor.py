@@ -110,7 +110,7 @@ def analyze_distribution_films_by_month(diary, year=None):
     return month_distribution_data
 
 def analyze_distribution_films_by_week(diary, year=None):
-    week_distribution_data = get_weekday_distribution(diary) if year == None else get_month_distribution(diary)
+    week_distribution_data = get_weekday_distribution(diary) if year == None else get_weekday_distribution(diary)
     return week_distribution_data
 
 def get_watched_df(config):

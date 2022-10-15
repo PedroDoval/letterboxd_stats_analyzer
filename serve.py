@@ -1,6 +1,6 @@
 import zipfile
 from flask import Flask, render_template, request, redirect, url_for
-import entrypoint
+import plots_entrypoint
 import data_processor
 import os
 
@@ -24,7 +24,6 @@ def upload_file():
 
             targetdir = os.path.join(os.getcwd(), 'data/')
             outputdir = os.path.join('static', 'output')
-            entrypoint.output_dir = outputdir
             file_path = os.path.join(targetdir, uploaded_file.filename)
             uploaded_file.save(file_path)
 
@@ -37,36 +36,38 @@ def upload_file():
             # Get profile
             profile = data_processor.read_profile(config["input_dir"])
 
+            plotter = plots_entrypoint.Plotter(web_service=True, output_dir=outputdir)
+
             # For all history
             diary_full = data_processor.get_diary(os.path.join(config["input_dir"], 'diary.csv'), year=None)
             year_distribution = data_processor.get_year_distribution(diary_full)
-            entrypoint.plot_distribution_films_by_year(year_distribution, web_service=True)
+            plotter.plot_distribution_films_by_year(year_distribution)
 
 
             # For all years
             diary_year = data_processor.get_diary(os.path.join(input_dir, 'diary.csv'), year)
 
             ratings_data = data_processor.analyze_ratings(diary_year)
-            entrypoint.plot_ratings_entrypoint(ratings_data, diary_year)
+            plotter.plot_ratings_entrypoint(ratings_data, diary_year)
 
             ratings_distribution, avg_rate = data_processor.analyze_ratings_distribution(diary_year)
-            entrypoint.plot_ratings_distribution_entrypoint(ratings_distribution, avg_rate)
+            plotter.plot_ratings_distribution_entrypoint(ratings_distribution, avg_rate)
 
 
-            #lists_data = data_processor.analyze_lists(config)
-            #entrypoint.plot_lists_data(lists_data, config)
+            lists_data = data_processor.analyze_lists(config)
+            plotter.plot_lists_data(lists_data, config)
 
             month_distribution_data = data_processor.analyze_distribution_films_by_month(diary_year, year)
-            entrypoint.plot_distribution_films_by_month(month_distribution_data, web_service=True)
+            plotter.plot_distribution_films_by_month(month_distribution_data)
 
             week_distribution_data = data_processor.analyze_distribution_films_by_week(diary_year, year)
-            entrypoint.plot_distribution_films_by_week(week_distribution_data, web_service=True)
+            plotter.plot_distribution_films_by_week(week_distribution_data)
 
             rewatched_rate, rewatched_percentage = data_processor.get_rewatched_rate(diary_year)
-            entrypoint.plot_rewatched_info(rewatched_rate, rewatched_percentage)
+            plotter.plot_rewatched_info(rewatched_rate, rewatched_percentage)
 
             reviews_texts = data_processor.get_reviews_texts(config, year=year)
-            entrypoint.plot_reviews_wordcloud(reviews_texts, config)
+            plotter.plot_reviews_wordcloud(reviews_texts, config)
 
         plot_files = os.listdir(outputdir)
         plot_files = [file for file in plot_files]

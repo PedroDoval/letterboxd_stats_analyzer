@@ -6,7 +6,7 @@ import matplotlib.dates as mdates
 import seaborn as sns
 
 
-def plot_bars_messages(count_messages, title, output_dir, xlabel, filename=None, transparent=True):
+def plot_bars_messages(count_messages, title, output_dir, xlabel, filename=None, bg_transparent=True):
     filename = title.replace("/", "-") if filename is None else filename
     values = count_messages.values()
     names = count_messages.keys()
@@ -17,11 +17,11 @@ def plot_bars_messages(count_messages, title, output_dir, xlabel, filename=None,
     plt.xticks(rotation=65, ha="right")
     plt.title(title, fontweight="bold")
     plt.bar(names, values, color='#00e054', edgecolor='black')
-    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=transparent, bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=bg_transparent, bbox_inches='tight')
     #plt.show()
 
 
-def plot_pie_messages(count_messages, title, output_dir, filename=None):
+def plot_pie_messages(count_messages, title, output_dir, filename=None, bg_transparent=True):
     filename = title.replace("/", "-") if filename is None else filename
 
     values = count_messages.values()
@@ -31,7 +31,7 @@ def plot_pie_messages(count_messages, title, output_dir, filename=None):
     plt.title(title, fontweight="bold")
     colors = ['#00e054', '#ff8000']
     plt.pie(values, labels=names, colors=colors)#, edgecolor='black')
-    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=True, bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=bg_transparent, bbox_inches='tight')
     #plt.show()
 
 
@@ -113,7 +113,7 @@ def equalize_size_list(lista, maxsize):
         lista.append("")
     return lista
 
-def plot_table(max_films, max_rate, min_films, min_rate, output_dir, filename):
+def plot_table(max_films, max_rate, min_films, min_rate, output_dir, filename, bg_transparent):
 
     data = np.array([list(max_films), list(max_rate), list(min_films), list(min_rate)]).transpose()
     fig, ax = plt.subplots()
@@ -131,15 +131,15 @@ def plot_table(max_films, max_rate, min_films, min_rate, output_dir, filename):
     table[(0,2)].set_facecolor("#00e054")
     table[(0,3)].set_facecolor("#00e054")
     #ax.set_title("Movies with higher or smaller rating")
-    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=True)# bbox_inches='tight')
+    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=bg_transparent)# bbox_inches='tight')
     #plt.show()
 
 
-def wordcloud(texts, output_dir):
+def wordcloud(texts, output_dir, bg_transparent):
     # Creating word_cloud with text as argument in .generate() method
     # https://amueller.github.io/word_cloud/generated/wordcloud.WordCloud.html #cividis
-
-    word_cloud = WordCloud(collocations=False, colormap='copper', background_color=None, mode='RGBA', contour_width=1).generate(texts)
+    bg_colour = None if bg_transparent else 'white'
+    word_cloud = WordCloud(collocations=False, colormap='copper', background_color=bg_colour, mode='RGBA', contour_width=1).generate(texts)
     # Display the generated Word Cloud
     #plt.imshow(word_cloud, interpolation='bilinear')
     #plt.axis("off")
