@@ -1,12 +1,14 @@
-from wordcloud import WordCloud
 import os
-import numpy as np
+
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+import numpy as np
 import seaborn as sns
+from wordcloud import WordCloud
 
 
-def plot_bars_messages(count_messages, title, output_dir, xlabel, filename=None):
+def plot_bars_messages(
+    count_messages, title, output_dir, xlabel, filename=None, bg_transparent=True
+):
     filename = title.replace("/", "-") if filename is None else filename
     values = count_messages.values()
     names = count_messages.keys()
@@ -16,12 +18,18 @@ def plot_bars_messages(count_messages, title, output_dir, xlabel, filename=None)
     plt.ylabel("Nº películas")
     plt.xticks(rotation=65, ha="right")
     plt.title(title, fontweight="bold")
-    plt.bar(names, values, color='#00e054', edgecolor='black')
-    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=True, bbox_inches='tight')
-    #plt.show()
+    plt.bar(names, values, color="#00e054", edgecolor="black")
+    fig.savefig(
+        os.path.join(output_dir, filename + ".png"),
+        transparent=bg_transparent,
+        bbox_inches="tight",
+    )
+    # plt.show()
 
 
-def plot_pie_messages(count_messages, title, output_dir, filename=None):
+def plot_pie_messages(
+    count_messages, title, output_dir, filename=None, bg_transparent=True
+):
     filename = title.replace("/", "-") if filename is None else filename
 
     values = count_messages.values()
@@ -29,10 +37,14 @@ def plot_pie_messages(count_messages, title, output_dir, filename=None):
 
     fig = plt.figure()
     plt.title(title, fontweight="bold")
-    colors = ['#00e054', '#ff8000']
-    plt.pie(values, labels=names, colors=colors)#, edgecolor='black')
-    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=True, bbox_inches='tight')
-    #plt.show()
+    colors = ["#00e054", "#ff8000"]
+    plt.pie(values, labels=names, colors=colors)  # , edgecolor='black')
+    fig.savefig(
+        os.path.join(output_dir, filename + ".png"),
+        transparent=bg_transparent,
+        bbox_inches="tight",
+    )
+    # plt.show()
 
 
 def plot_day_and_hour(df, title, user, output_dir, filename=None):
@@ -52,7 +64,11 @@ def plot_day_and_hour(df, title, user, output_dir, filename=None):
     )
     plt.xticks(rotation=50, fontsize=8)
     plt.yticks(fontsize=8)
-    fig.savefig(os.path.join(output_dir, "plot_day_and_hour_" + user + ".png"), transparent=True, bbox_inches='tight')
+    fig.savefig(
+        os.path.join(output_dir, "plot_day_and_hour_" + user + ".png"),
+        transparent=True,
+        bbox_inches="tight",
+    )
     # colorbar = ax.collections[0].colorbar
     # colorbar.set_ticks([0, 2.2])
     # plt.show()
@@ -66,83 +82,122 @@ def plot_pie_messages(count, title, output_dir, filename=None):
 
     fig = plt.figure()
     plt.title(title, fontweight="bold")
-    colors = ['#00e054', '#ff8000']
-    plt.pie(values, labels=names, colors=colors, autopct=lambda p: '{:.0f}'.format(p * sum(values) / 100), shadow=True)
-    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=True, bbox_inches='tight')
-    #plt.show()
+    colors = ["#00e054", "#ff8000"]
+    plt.pie(
+        values,
+        labels=names,
+        colors=colors,
+        autopct=lambda p: "{:.0f}".format(p * sum(values) / 100),
+        shadow=True,
+    )
+    fig.savefig(
+        os.path.join(output_dir, filename + ".png"),
+        transparent=True,
+        bbox_inches="tight",
+    )
+    # plt.show()
 
 
 def plot_lists_pies(lists, config, filename=None):
     title = "user_lists"
     filename = title.replace("/", "-") if filename is None else filename
 
-
     fig = plt.figure()
-    fig.suptitle('Listas y % de películas vistas', fontweight="bold")
+    fig.suptitle("Listas y % de películas vistas", fontweight="bold")
     # 2 rows 2 columns
-    rows = int(len(lists)/2)
-    if len(lists)%2 == 1: rows += 1
-    i=0
-    j=0
+    rows = int(len(lists) / 2)
+    if len(lists) % 2 == 1:
+        rows += 1
+    i = 0
+    j = 0
     index = 0
-    colors = ['#00e054', '#ff8000']
+    colors = ["#00e054", "#ff8000"]
     for lista in lists:
-        values = [lista["num_watched"], lista["size"]-lista["num_watched"]]
-        if values == [0,0]:
+        values = [lista["num_watched"], lista["size"] - lista["num_watched"]]
+        if values == [0, 0]:
             continue
         # first row, first column
 
-        ax1 = plt.subplot2grid((rows, 2), (i,j))
+        ax1 = plt.subplot2grid((rows, 2), (i, j))
 
-        plt.pie(values, colors=colors,shadow=True)
-        plt.title(lista["name"] + " " + '({:.0f}/{:.0f})'.format(values[0], sum(values) ))
+        plt.pie(values, colors=colors, shadow=True)
+        plt.title(
+            lista["name"] + " " + "({:.0f}/{:.0f})".format(values[0], sum(values))
+        )
         if index % 2 == 1:
-            i+=1
-            j=0
+            i += 1
+            j = 0
         else:
-            j=1
+            j = 1
         index += 1
 
-    patches, texts = ax1.pie(values, colors=colors, startangle=90)  # use this plot to show the legend
-    plt.legend(patches, ['seen', 'unseen'], bbox_to_anchor=(2.3, 2), prop={'size': 10}, loc='best')  # show the legend defined in labels
-    fig.savefig(os.path.join(config["output_dir"], filename + ".png"), transparent=True, bbox_inches='tight')
-    #plt.show()
+    patches, texts = ax1.pie(
+        values, colors=colors, startangle=90
+    )  # use this plot to show the legend
+    plt.legend(
+        patches,
+        ["seen", "unseen"],
+        bbox_to_anchor=(2.3, 2),
+        prop={"size": 10},
+        loc="best",
+    )  # show the legend defined in labels
+    fig.savefig(
+        os.path.join(config["output_dir"], filename + ".png"),
+        transparent=True,
+        bbox_inches="tight",
+    )
+    # plt.show()
+
 
 def equalize_size_list(lista, maxsize):
     while len(lista) < maxsize:
         lista.append("")
     return lista
 
-def plot_table(max_films, max_rate, min_films, min_rate, output_dir, filename):
 
-    data = np.array([list(max_films), list(max_rate), list(min_films), list(min_rate)]).transpose()
+def plot_table(
+    max_films, max_rate, min_films, min_rate, output_dir, filename, bg_transparent
+):
+
+    data = np.array(
+        [list(max_films), list(max_rate), list(min_films), list(min_rate)]
+    ).transpose()
     fig, ax = plt.subplots()
     ax.set_axis_off()
-    table = plt.table(cellText=data,
-        rowLabels=["" for i in range(0,5)],
+    table = plt.table(
+        cellText=data,
+        rowLabels=["" for i in range(0, 5)],
         colLabels=["Film", "Score (★)", "Film", "Score (★)"],
-        loc='center',
-        cellLoc ='center',
+        loc="center",
+        cellLoc="center",
     )
     table.set_fontsize(15)
     table.scale(1.2, 1.2)  # may help
-    table[(0,0)].set_facecolor("#00e054")
-    table[(0,1)].set_facecolor("#00e054")
-    table[(0,2)].set_facecolor("#00e054")
-    table[(0,3)].set_facecolor("#00e054")
-    #ax.set_title("Movies with higher or smaller rating")
-    fig.savefig(os.path.join(output_dir, filename + ".png"), transparent=True)# bbox_inches='tight')
-    #plt.show()
+    table[(0, 0)].set_facecolor("#00e054")
+    table[(0, 1)].set_facecolor("#00e054")
+    table[(0, 2)].set_facecolor("#00e054")
+    table[(0, 3)].set_facecolor("#00e054")
+    # ax.set_title("Movies with higher or smaller rating")
+    fig.savefig(
+        os.path.join(output_dir, filename + ".png"), transparent=bg_transparent
+    )  # bbox_inches='tight')
+    # plt.show()
 
 
-def wordcloud(texts, output_dir):
+def wordcloud(texts, output_dir, bg_transparent):
     # Creating word_cloud with text as argument in .generate() method
     # https://amueller.github.io/word_cloud/generated/wordcloud.WordCloud.html #cividis
-
-    word_cloud = WordCloud(collocations=False, colormap='copper', background_color=None, mode='RGBA', contour_width=1).generate(texts)
+    bg_colour = None if bg_transparent else "white"
+    word_cloud = WordCloud(
+        collocations=False,
+        colormap="copper",
+        background_color=bg_colour,
+        mode="RGBA",
+        contour_width=1,
+    ).generate(texts)
     # Display the generated Word Cloud
-    #plt.imshow(word_cloud, interpolation='bilinear')
-    #plt.axis("off")
+    # plt.imshow(word_cloud, interpolation='bilinear')
+    # plt.axis("off")
     word_cloud.to_file(os.path.join(output_dir, "wordcloud" + ".png"))
-    #fig.savefig(os.path.join(output_dir, "wordcloud" + ".png"), transparent=True)
-    #plt.show()
+    # fig.savefig(os.path.join(output_dir, "wordcloud" + ".png"), transparent=True)
+    # plt.show()

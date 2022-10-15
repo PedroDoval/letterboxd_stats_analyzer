@@ -3,4 +3,6 @@ input_dir: data
 
 output_dir: output
 
-year: 2021
+year: 2022
+
+get_wordcloud: True
